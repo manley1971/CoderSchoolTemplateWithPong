@@ -13,6 +13,112 @@
 </head>
 
 <body>
+  <canvas id="gamespace"width="640"height="440"style="background:pink"></canvas>
+  <script>
+    var START_GAMESPACE_LINES = 5
+var BOUNDS_WIDTH = 650
+var BOUNDS_HEIGHT = 450
+var gameSpace = document.getElementById('gamespace').getContext('2d')
+var gameIsNotDrawn = true;
+var gameIsPaused = true;
+gameSpace.fillStyle = "grey"
+gameSpace.font = "75px monospace"
+
+p = q = a = b = 0
+nearY = BOUNDS_HEIGHT/2
+farY = BOUNDS_HEIGHT/2
+// Start The Ball at this location
+x = 250;
+y = 250;
+
+u = -1;
+v = 1;
+
+setInterval(function() {
+  if (gameIsPaused && !gameIsNotDrawn) return;
+  gameIsNotDrawn=false;
+  gameSpace.clearRect(0, 0, BOUNDS_WIDTH, BOUNDS_HEIGHT)
+
+  for (i = START_GAMESPACE_LINES; i < BOUNDS_HEIGHT+40; i += 20)
+    gameSpace.fillRect(BOUNDS_WIDTH/2, i, 4, 10)
+
+  nearY += p;
+  farY += q
+
+  x += u;
+  y += v
+  if (y <= 0) { q
+    y = 0;
+    v = -v
+  }
+  if (y >= BOUNDS_HEIGHT) {
+    y = BOUNDS_HEIGHT;
+    v = -v
+  }
+  if (x <= 40 && x >= 20 && y < nearY + 110 && y > nearY - 10) {
+    u = -u + 0.2;
+    v += (y - nearY - 45) / 20
+  }
+  if (x <= BOUNDS_WIDTH-30&& x >= BOUNDS_WIDTH-50&& y < farY + 110 && y > farY - 10) {
+    console.log("Colision on far side")
+    u = -u - 0.2;
+    v += (y - farY - 45) / 20
+  }
+  if (x < -10) {
+    b++;
+    x = 360;
+    y = 235;
+    u = 5;
+   gameIsPaused = true;
+  }
+  if (x > BOUNDS_WIDTH ) { 
+    a++;
+    x = 280;
+    y = 235;
+    u = -5;
+    gameIsPaused = true;
+  }
+  gameSpace.fillText(a + " " + b, 266, 60)
+  gameSpace.fillRect(20, nearY, 20, 100)
+  gameSpace.fillRect(600, farY, 20, 100)
+  gameSpace.fillRect(x, y, 10, 10)
+}, 30)
+document.onkeydown = function(e) {
+  k = (e || window.event).keyCode;
+  gameIsPaused=false
+  p=0;
+  q=0;
+  if (k==65)
+    p=5
+  if (k==81)
+    p=-5
+  if (k==40)
+    q=5
+  if (k==38)
+    q=-5
+}
+document.onkeyup = function(e) {
+    p=0;
+    q=0;
+    if (nearY<0)
+      nearY=100;
+}
+
+/* Cheat sheet
+a -> left player score
+b -> right player score
+
+
+p -> left paddle y velocity
+q -> right paddle y velocity
+
+u -> ball x velocity
+v -> ball y velocity
+
+x -> ball x
+y -> ball y
+*/
+  </script>
   <h1>Dave W Manley</h1>
 
   <section>
